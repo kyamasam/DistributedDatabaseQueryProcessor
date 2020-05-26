@@ -61,7 +61,7 @@ def create_master_students_table():
                '''CREATE TABLE students2
                          (
                            ID SERIAL,
-                           REGNO   VARCHAR(255) NOT NULL,
+                           REGNO   VARCHAR(255) PRIMARY KEY,
                            CAMPUS         TEXT      NOT NULL,
                            YEAROFSTUDY    INT       NOT NULL
                          ); '''
