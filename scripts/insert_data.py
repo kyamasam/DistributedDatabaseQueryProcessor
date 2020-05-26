@@ -1,5 +1,8 @@
 import psycopg2
 
+from hosts import master_students_db
+
+
 records = [
             ('P15/0000/1101', 'CHIROMO', 1),
             ('P15/0000/1112', 'CHIROMO', 1),
@@ -18,7 +21,7 @@ def insert_records(records):
     try:
         connection = psycopg2.connect(user="admin",
                                       password="admin",
-                                      host="34.70.144.81",
+                                      host=master_students_db,
                                       port="5432",
                                       database="school")
         cursor = connection.cursor()

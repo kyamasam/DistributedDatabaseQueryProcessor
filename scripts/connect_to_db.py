@@ -1,10 +1,12 @@
+from hosts import master_students_db
+
 import psycopg2
+
 try:
     connection = psycopg2.connect(
         user="admin",
         password="admin",
-        # host="127.0.0.1",
-        host="34.70.144.81",
+        host=master_students_db,
         port="5432",
         database="school",
         )

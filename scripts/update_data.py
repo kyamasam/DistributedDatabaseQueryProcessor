@@ -1,11 +1,13 @@
 import psycopg2
 
+from hosts import master_students_db
+
 
 def update_student_record(student_id, fee_balance):
     try:
         connection = psycopg2.connect(user="admin",
                                       password="admin",
-                                      host="34.70.144.81",
+                                      host=master_students_db,
                                       port="5432",
                                       database="school")
 

@@ -1,10 +1,14 @@
 # CREATE TABLE STUDENTS
 import psycopg2
+
+from hosts import master_students_db
+
+
 try:
     connection = psycopg2.connect(
         user="admin",
         password="admin",
-        host="34.70.144.81",
+        host=master_students_db,
         port="5432",
         database="school"
                                   )
@@ -14,7 +18,7 @@ try:
     create_table_query = '''CREATE TABLE students
           (
             ID SERIAL,
-            REGNO          VARCHAR   NOT NULL,
+            REGNO   VARCHAR   UNIQUE NOT NULL,
             CAMPUS         TEXT      NOT NULL,
             YEAROFSTUDY    INT       NOT NULL
           ); '''

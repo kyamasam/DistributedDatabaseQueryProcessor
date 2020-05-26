@@ -1,11 +1,13 @@
 import psycopg2
 
+from hosts import master_students_db
+
 
 def delete_student_record(student_id):
     try:
         connection = psycopg2.connect(user="admin",
                                       password="admin",
-                                      host="127.0.0.1",
+                                      host=master_students_db,
                                       port="5432",
                                       database="school")
 

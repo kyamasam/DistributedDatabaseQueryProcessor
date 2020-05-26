@@ -1,29 +1,26 @@
 # FETCH INSERTED DATA
 import psycopg2
 
-from hosts import master_students_db
+from hosts import fragment_kabete
 
 
 try:
     connection = psycopg2.connect(
         user="admin",
         password="admin",
-        host=master_students_db,
+        host=fragment_kabete,
         port="5432",
         database="school")
     cursor = connection.cursor()
-    postgreSQL_select_Query = "select * from students"
+    postgreSQL_select_Query = "select * from students_kabete"
 
     cursor.execute(postgreSQL_select_Query)
-    print("Selecting rows from students table using cursor.fetchall")
+    print("Fetching records from FRAGMENT KABETE")
     students_records = cursor.fetchall()
 
-    print("Print each row and it's columns values")
+    print("ID  REGNO         CAMPUS YEAR")
     for row in students_records:
-        print("Id = ", row[0],)
-        print("Reg = ", row[1])
-        print("Campus  = ", row[2])
-        print("YearOfStudy  = ", row[3])
+        print(row[0], " ", row[1], row[2], row[3])
 except (Exception, psycopg2.Error) as error:
     print("Error while fetching data from PostgreSQL", error)
 
@@ -40,13 +37,13 @@ def get_student_details(student_id):
     try:
         connection = psycopg2.connect(user="admin",
                                       password="admin",
-                                      host=master_students_db,
+                                      host=fragment_kabete,
                                       port="5432",
                                       database="school")
 
-        print("Using Python variable in PostgreSQL select Query")
+        print("Fetching record from FRAGMENT KABETE")
         cursor = connection.cursor()
-        postgreSQL_select_Query = "select * from students where id = %s"
+        postgreSQL_select_Query = "select * from students_kabete where id = %s"
 
         cursor.execute(postgreSQL_select_Query, (student_id,))
         students_records = cursor.fetchall()

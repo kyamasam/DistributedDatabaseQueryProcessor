@@ -1,10 +1,9 @@
-
 # FRAGMENT STUDENTS
 
 import psycopg2
 
 from hosts import (
-    fragment_chiromo,
+    fragment_kabete,
     master_students_db,
 )
 
@@ -43,7 +42,7 @@ def fragment_students_by_campus(college):
         return 'students_records'
 
 
-fragment_students_by_campus('CHIROMO')
+fragment_students_by_campus('KABETE')
 
 
 def create_fragment_table():
@@ -51,24 +50,24 @@ def create_fragment_table():
         connection = psycopg2.connect(
             user="admin",
             password="admin",
-            host=fragment_chiromo,
+            host=fragment_kabete,
             port="5432",
             database="school"
                                     )
 
         cursor = connection.cursor()
 
-        create_table_query = '''CREATE TABLE students_chiromo
+        create_table_query = '''CREATE TABLE students_kabete
             (
-                ID             INT       NOT NULL,
-                REGNO          VARCHAR   NOT NULL,
+                ID     INT       UNIQUE  NOT NULL,
+                REGNO  VARCHAR UNIQUE    NOT NULL,
                 CAMPUS         TEXT      NOT NULL,
                 YEAROFSTUDY    INT       NOT NULL
             ); '''
 
         cursor.execute(create_table_query)
         connection.commit()
-        print("Fragment students_chiromo created successfully")
+        print("Fragment students_kabete created successfully")
 
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error while creating PostgreSQL table", error)
@@ -87,13 +86,13 @@ def insert_records(records):
     try:
         connection = psycopg2.connect(user="admin",
                                       password="admin",
-                                      host=fragment_chiromo,
+                                      host=fragment_kabete,
                                       port="5432",
                                       database="school")
         cursor = connection.cursor()
 
         postgres_insert_query = """
-        INSERT INTO students_chiromo (
+        INSERT INTO students_kabete (
         ID, REGNO, CAMPUS, YEAROFSTUDY
         ) VALUES (%s, %s, %s, %s)
         """
@@ -102,22 +101,18 @@ def insert_records(records):
 
             connection.commit()
             count = cursor.rowcount
-            print(count, "Record inserted successfully into FRAGMENT chiromo")
+            print(count, "Record inserted successfully into FRAGMENT KABETE")
 
     except (Exception, psycopg2.Error) as error:
         if(connection):
-            print("Failed to insert records into FRAGMENT chiromo", error)
+            print("Failed to insert records into FRAGMENT KABETE", error)
 
     finally:
         # closing database connection.
         if(connection):
             cursor.close()
             connection.close()
-            print("PostgreSQL connection is closed")
+            print("FRAGMENT KABETE SUCCESSFULLY CREATED")
 
 
 insert_records(students)
-
-
-# if __name__ == "__main__":
-# print(students)

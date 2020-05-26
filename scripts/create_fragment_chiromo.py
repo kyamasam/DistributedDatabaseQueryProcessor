@@ -1,4 +1,3 @@
-
 # FRAGMENT STUDENTS
 
 import psycopg2
@@ -60,8 +59,8 @@ def create_fragment_table():
 
         create_table_query = '''CREATE TABLE students_chiromo
             (
-                ID             INT       NOT NULL,
-                REGNO          VARCHAR   NOT NULL,
+                ID     INT     UNIQUE    NOT NULL,
+                REGNO  VARCHAR UNIQUE    NOT NULL,
                 CAMPUS         TEXT      NOT NULL,
                 YEAROFSTUDY    INT       NOT NULL
             ); '''
@@ -117,7 +116,3 @@ def insert_records(records):
 
 
 insert_records(students)
-
-
-# if __name__ == "__main__":
-# print(students)
