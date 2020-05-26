@@ -1,0 +1,8 @@
+
+# Virtual environments
+venv/
+env/
+
+
+# python byte files
+__pycache__/

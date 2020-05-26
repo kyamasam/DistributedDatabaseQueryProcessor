@@ -1,0 +1,71 @@
+---
+- hosts: all
+  remote_user: root
+  become: yes
+  gather_facts: True
+
+  tasks:
+
+          - name: Add universe repository for bionic
+            apt_repository: 
+              repo: deb http://archive.ubuntu.com/ubuntu bionic universe
+              state: present
+            when: ansible_distribution_release == 'bionic'
+  
+          - name: Install base packages
+            apt: 
+              name: "{{ packages }}"
+            vars:
+              packages:
+                - locales
+                - build-essential
+                - htop
+                - git
+                - python3-apt
+                - python3-pip
+                - python-psycopg2
+                - supervisor
+                - postgresql
+                - libpq-dev
+                - ufw
+                - psmisc
+          
+          - name: Ensure PostgreSQL service is running
+            service:
+              name: postgresql
+              state: started
+              enabled: yes
+
+          - name: install setfacl support to enable ansible create temporary files
+            become: yes
+            apt: pkg=acl
+          
+          - name: Create database
+            become: yes
+            become_user: postgres
+            become_method: sudo
+            postgresql_db:
+              name: school
+              state: present
+            
+
+          - name: Ensure user has access to db
+            become: yes
+            become_user: postgres
+            postgresql_user:
+              db: school
+              name: admin
+              password: admin
+              priv: ALL
+              state: present
+            
+          - name: Create project directory
+            file:
+              state: directory
+              path: project
+          
+          - name: Copy files to server
+            copy:
+              src: /home/sam/Desktop/School/DistributedDatabases/school-distributed-database/scripts
+              dest: /home/sam/project/
+              mode: 0777
