@@ -29,7 +29,6 @@ def fragment_students_by_campus(college):
         for row in students_records:
             print(row[0], row[1], row[2], row[3])
             students.append(row)
-        return 'students_records'
 
     except (Exception, psycopg2.Error) as error:
         print("Error fetching data from STUDENTS table", error)
@@ -40,7 +39,6 @@ def fragment_students_by_campus(college):
             cursor.close()
             connection.close()
             print("Records fetched successfully from STUDENTS relation \n")
-        return 'students_records'
 
 
 fragment_students_by_campus('CHIROMO')

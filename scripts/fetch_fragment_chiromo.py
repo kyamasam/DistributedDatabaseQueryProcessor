@@ -20,10 +20,6 @@ try:
 
     print("ID  REGNO         CAMPUS YEAR")
     for row in students_records:
-        # print("Id = ", row[0],)
-        # print("Reg = ", row[1])
-        # print("Campus  = ", row[2])
-        # print("YearOfStudy  = ", row[3])
         print(row[0], " ", row[1], row[2], row[3])
 
 except (Exception, psycopg2.Error) as error:
