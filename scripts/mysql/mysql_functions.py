@@ -42,7 +42,7 @@ def connect_to_db(user=myDefaultMysqlParams.user, password=myDefaultMysqlParams.
         print("Error while connecting to MySQL", e)
 
         # connection should be closed by implementing function
-
+connect_to_db()
 
 def execute_query(query, user=myDefaultMysqlParams.user, password=myDefaultMysqlParams.password,
                   host=myDefaultMysqlParams.host, database=myDefaultMysqlParams.database):
@@ -91,13 +91,13 @@ def insert_query(query, records_to_insert, user=myDefaultMysqlParams.user, passw
 
 
 # create table query
-execute_query(query='''CREATE TABLE students
-          (
-            ID SERIAL,
-            REGNO   VARCHAR(255) NOT NULL,
-            CAMPUS         TEXT      NOT NULL,
-            YEAROFSTUDY    INT       NOT NULL
-          ); ''')
+# execute_query(query='''CREATE TABLE students
+#           (
+#             ID SERIAL,
+#             REGNO   VARCHAR(255) NOT NULL,
+#             CAMPUS         TEXT      NOT NULL,
+#             YEAROFSTUDY    INT       NOT NULL
+#           ); ''')
 
 # insert query
 insert_query(query="""INSERT INTO students (REGNO, CAMPUS, YEAROFSTUDY)
