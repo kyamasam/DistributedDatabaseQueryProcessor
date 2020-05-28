@@ -1,8 +1,3 @@
-import psycopg2
-import psycopg2.extras
-
-from functions import insert_records_query
-
 
 records = [
             ('P15/111/1101', 'CHIROMO', 1),
@@ -46,10 +41,3 @@ records = [
             ('P15/444/2209', 'KABETE', 4),
             ('P15/444/2210', 'KABETE', 1),
         ]
-
-
-insert_records_query(records_to_insert=records, query="""
-        INSERT INTO students (
-        REGNO, CAMPUS, YEAROFSTUDY
-        ) VALUES %s
-        """)
