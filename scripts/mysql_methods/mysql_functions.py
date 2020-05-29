@@ -70,6 +70,7 @@ def execute_query(query, user=myDefaultMysqlParams.user, password=myDefaultMysql
             print("MySQL connection is closed")
 
 
+
 def insert_records_query(query, records_to_insert, user=myDefaultMysqlParams.user, password=myDefaultMysqlParams.password,
                          host=myDefaultMysqlParams.host, database=myDefaultMysqlParams.database):
 
