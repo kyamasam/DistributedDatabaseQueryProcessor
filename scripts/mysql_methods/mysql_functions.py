@@ -7,15 +7,16 @@ from mysql.connector import Error
 sys.path.append(os.path.dirname(os.path.abspath('../data')))
 from data.students_records import records
 
+
 class DefaultMysqlParams:
     def __init__(self, user="admin",
                  password="admin",
                  host="52.58.90.32",
                  database="school"):
-        self.user = "admin"
-        self.password = "admin"
-        self.host = "52.58.90.32"
-        self.database = "school"
+        self.user = user
+        self.password = password
+        self.host = host
+        self.database = database
 
 
 myDefaultMysqlParams = DefaultMysqlParams()
@@ -42,7 +43,10 @@ def connect_to_db(user=myDefaultMysqlParams.user, password=myDefaultMysqlParams.
         print("Error while connecting to MySQL", e)
 
         # connection should be closed by implementing function
-connect_to_db()
+
+
+# connect_to_db()
+
 
 def execute_query(query, user=myDefaultMysqlParams.user, password=myDefaultMysqlParams.password,
                   host=myDefaultMysqlParams.host, database=myDefaultMysqlParams.database):
@@ -66,8 +70,10 @@ def execute_query(query, user=myDefaultMysqlParams.user, password=myDefaultMysql
             print("MySQL connection is closed")
 
 
-def insert_query(query, records_to_insert, user=myDefaultMysqlParams.user, password=myDefaultMysqlParams.password,
-                 host=myDefaultMysqlParams.host, database=myDefaultMysqlParams.database):
+def insert_records_query(query, records_to_insert, user=myDefaultMysqlParams.user, password=myDefaultMysqlParams.password,
+                         host=myDefaultMysqlParams.host, database=myDefaultMysqlParams.database):
+
+    print(query)
     try:
         connection = connect_to_db(user=user, password=password, host=host, database=database)
 
@@ -100,8 +106,8 @@ def insert_query(query, records_to_insert, user=myDefaultMysqlParams.user, passw
 #           ); ''')
 
 # insert query
-insert_query(query="""INSERT INTO students (REGNO, CAMPUS, YEAROFSTUDY)
-                               VALUES (%s, %s, %s) """, records_to_insert= records)
+# insert_records_query(query="""INSERT INTO students (REGNO, CAMPUS, YEAROFSTUDY)
+#                                VALUES (%s, %s, %s) """, records_to_insert=records)
 
 # select query
 # execute_query(query='''CREATE TABLE students

@@ -6,7 +6,7 @@ DATABASES = {
         'host': '34.70.144.81',
         'port': '5432',
         'database': 'school',
-        'dialect': 'postgres',
+        'dialect': 'postgres_methods',
         'platform': 'Debian 11.7-0+deb10u1'
     },
     'site_chiromo': {
@@ -37,3 +37,4 @@ DATABASES = {
         'platform':'Windows Server 2009',
     },
 }
+

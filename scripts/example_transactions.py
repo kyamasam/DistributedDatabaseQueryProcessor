@@ -3,7 +3,7 @@ import psycopg2
 
 from data.students_records import records
 
-from postgres.postgres_functions import exec_query, insert_records_query, connect_db
+from postgres_methods.postgres_functions import execute_query, insert_records_query, connect_db
 
 site_chiromo = DATABASES['site_chiromo']
 site_kabete = DATABASES['site_kabete']
@@ -11,8 +11,8 @@ master_students_db = DATABASES['master_students_db']
 
 
 def create_fragment_chiromo():
-    students_records = exec_query(query="select * from students where campus = 'CHIROMO'", host=master_students_db['host'])
-    exec_query(query=
+    students_records = execute_query(query="select * from students where campus = 'CHIROMO'", host=master_students_db['host'])
+    execute_query(query=
                '''CREATE TABLE students_chiromo
                   (
                       ID     INT     UNIQUE    NOT NULL,
@@ -20,7 +20,7 @@ def create_fragment_chiromo():
                       CAMPUS         TEXT      NOT NULL,
                       YEAROFSTUDY    INT       NOT NULL
                   ); '''
-               , host=site_chiromo['host'])
+                  , host=site_chiromo['host'])
 
     insert_records_query(records_to_insert=students_records, query="""
             INSERT INTO students_chiromo (
@@ -34,8 +34,8 @@ def create_fragment_chiromo():
 
 def create_fragment_kabete():
     students = []
-    students_records = exec_query(query="select * from students where campus = 'KABETE'", host=master_students_db['host'])
-    exec_query(query=
+    students_records = execute_query(query="select * from students where campus = 'KABETE'", host=master_students_db['host'])
+    execute_query(query=
                '''CREATE TABLE students_kabete
                   (
                       ID     INT     UNIQUE    NOT NULL,
@@ -43,7 +43,7 @@ def create_fragment_kabete():
                       CAMPUS         TEXT      NOT NULL,
                       YEAROFSTUDY    INT       NOT NULL
                   ); '''
-               , host=site_kabete['host'])
+                  , host=site_kabete['host'])
 
     # TODO: Create A Mass Insert Function
 
@@ -57,7 +57,7 @@ def create_fragment_kabete():
 # create_fragment_kabete()
 
 def create_master_students_table():
-    exec_query(query=
+    execute_query(query=
                '''CREATE TABLE students2
                          (
                            ID SERIAL,
@@ -65,38 +65,38 @@ def create_master_students_table():
                            CAMPUS         TEXT      NOT NULL,
                            YEAROFSTUDY    INT       NOT NULL
                          ); '''
-               )
+                  )
 
 
 # create_master_students_table()
 
 def fetch_fragment_chiromo():
-    exec_query(query="select * from students_chiromo", host=site_chiromo['host'], )
+    execute_query(query="select * from students_chiromo", host=site_chiromo['host'], )
 
     # FETCH PARAMETARIZED DATA
 
-    exec_query(query="select * from students_chiromo where id = 1", host=site_chiromo['host'], )
+    execute_query(query="select * from students_chiromo where id = 1", host=site_chiromo['host'], )
 
 
 # fetch_fragment_chiromo()
 
 def fetch_fragment_kabete():
-    exec_query(query="select * from students_kabete", host=site_kabete['host'], )
-    exec_query(query="select * from students_kabete where id = 1", host=site_kabete['host'], )
+    execute_query(query="select * from students_kabete", host=site_kabete['host'], )
+    execute_query(query="select * from students_kabete where id = 1", host=site_kabete['host'], )
 
 
 # fetch_fragment_kabete()
 
 
 def fetch_master_data():
-    exec_query(query="select * from students")
-    exec_query(query="select * from students where id = 2")
+    execute_query(query="select * from students")
+    execute_query(query="select * from students where id = 2")
 
 
 # fetch_master_data()
 
 def delete_data_from_master():
-    exec_query(query="Delete from students where id = 10")
+    execute_query(query="Delete from students where id = 10")
 
 
 # delete_data_from_master()

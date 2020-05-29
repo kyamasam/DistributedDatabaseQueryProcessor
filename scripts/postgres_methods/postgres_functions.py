@@ -38,7 +38,7 @@ def connect_db(user="admin", password="admin", host="34.70.144.81", port="5432",
 
 # connect_db(host=site_chiromo)
 
-def exec_query(query, user="admin", password="admin", host="34.70.144.81", port="5432", database="school"):
+def execute_query(query, user="admin", password="admin", host="34.70.144.81", port="5432", database="school"):
     try:
         connection = connect_db()
         cursor = connection.cursor()
@@ -84,6 +84,7 @@ def exec_query(query, user="admin", password="admin", host="34.70.144.81", port=
 def insert_records_query(records_to_insert, query, template=None, user="admin", password="admin", host="34.70.144.81",
                          port="5432",
                          database="school"):
+    print(query)
     try:
         connection = connect_db()
         cursor = connection.cursor()
