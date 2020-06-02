@@ -1,7 +1,3 @@
-import psycopg2
-
-from hosts import master_students_db
-
 
 records = [
             ('P15/111/1101', 'CHIROMO', 1),
@@ -45,39 +41,12 @@ records = [
             ('P15/444/2209', 'KABETE', 4),
             ('P15/444/2210', 'KABETE', 1),
         ]
-
-
-def insert_records(records):
-    try:
-        connection = psycopg2.connect(user="admin",
-                                      password="admin",
-                                      host=master_students_db,
-                                      port="5432",
-                                      database="school")
-        cursor = connection.cursor()
-
-        postgres_insert_query = """
-        INSERT INTO students (
-        REGNO, CAMPUS, YEAROFSTUDY
-        ) VALUES (%s,%s, %s)
-        """
-        for record in records:
-            cursor.execute(postgres_insert_query, record)
-
-            connection.commit()
-            count = cursor.rowcount
-            print(count, "Record inserted successfully into students table")
-
-    except (Exception, psycopg2.Error) as error:
-        if(connection):
-            print("Failed to insert records into students table", error)
-
-    finally:
-        # closing database connection.
-        if(connection):
-            cursor.close()
-            connection.close()
-            print("PostgreSQL connection is closed")
-
-
-insert_records(records)
+records_with_id = [
+    ( 1000, 'P15/111/1101', 'CHIROMO', 1),
+    ( 1002, 'P15/111/1112', 'CHIROMO', 3),
+    ( 1003, 'P15/111/1113', 'KABETE', 1),
+    ( 1004, 'P15/111/1114', 'CHIROMO', 4),
+    ( 1005, 'P15/111/1115', 'KABETE', 1),
+    ( 1006, 'P15/111/1116', 'CHIROMO', 3),
+    ( 1007, 'P15/111/1117', 'KABETE', 1),
+]
