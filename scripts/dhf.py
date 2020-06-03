@@ -158,7 +158,7 @@ def insert_dhf_fee_kabete_records(records, site):
             print(f"CONNECTION TO FRAGMENT {site} CLOSED")
 
 
-insert_dhf_fee_kabete_records(fee_chiromo, site_kabete)
+insert_dhf_fee_kabete_records(fee_kabete, site_kabete)
 
 
 def insert_dhf_fee_chiromo_records(records, site):
