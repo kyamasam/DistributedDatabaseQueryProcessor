@@ -43,7 +43,11 @@ def phf_students_using_campus(college):
             print("Records fetched successfully from MASTER STUDENTS relation \n")
 
 
-def create_phf_fragment_table(site):
+kabete_students = phf_students_using_campus('KABETE')
+chiromo_students = phf_students_using_campus('CHIROMO')
+
+
+def create_phf_table_site_kabete(site):
     """Create fragment table in MySQL db on site."""
     try:
         connection = mysql.connector.connect(
@@ -58,7 +62,7 @@ def create_phf_fragment_table(site):
             print(f"Connected to db {site}, MySQL Server version ", db_Info)
         cursor = connection.cursor()
 
-        create_table_query = '''CREATE TABLE students_fragment
+        create_table_query = '''CREATE TABLE fragment_students_kabete
             (
                 ID     INT            NOT NULL UNIQUE,
                 REGNO  VARCHAR(20)    NOT NULL UNIQUE,
@@ -81,11 +85,51 @@ def create_phf_fragment_table(site):
             print(f"{site['application_wide_name']} MySQL connection is closed")
 
 
-create_phf_fragment_table(site_kabete)
-create_phf_fragment_table(site_chiromo)
+create_phf_table_site_kabete(site_kabete)
 
 
-def insert_phf_records(records, site):
+def create_phf_table_site_chiromo(site):
+    """Create fragment table in MySQL db on site."""
+    try:
+        connection = mysql.connector.connect(
+            user="admin",
+            password="admin",
+            host=site['host'],
+            database="school"
+                                    )
+
+        if connection.is_connected():
+            db_Info = connection.get_server_info()
+            print(f"Connected to db {site}, MySQL Server version ", db_Info)
+        cursor = connection.cursor()
+
+        create_table_query = '''CREATE TABLE fragment_students_chiromo
+            (
+                ID     INT            NOT NULL UNIQUE,
+                REGNO  VARCHAR(20)    NOT NULL UNIQUE,
+                CAMPUS         TEXT      NOT NULL,
+                YEAROFSTUDY    INT       NOT NULL
+            ); '''
+
+        result = cursor.execute(create_table_query)
+        connection.commit()
+        print(f"Fragment created successfully in {site['application_wide_name']}")
+
+        return result
+
+    except mysql.connector.Error as error:
+        print("Failed to create fragment table in MySQL: {}".format(error))
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print(f"{site['application_wide_name']} MySQL connection is closed")
+
+
+create_phf_table_site_chiromo(site_chiromo)
+
+
+def insert_phf_records_site_chiromo(records, site):
     try:
         connection = mysql.connector.connect(user="admin",
                                       password="admin",
@@ -94,7 +138,7 @@ def insert_phf_records(records, site):
         cursor = connection.cursor()
 
         mysql_insert_query = """
-        INSERT INTO students_fragment (
+        INSERT INTO fragment_students_chiromo (
         ID, REGNO, CAMPUS, YEAROFSTUDY
         ) VALUES (%s, %s, %s, %s)
         """
@@ -113,8 +157,35 @@ def insert_phf_records(records, site):
             print(f"CONNECTION TO FRAGMENT {site} CLOSED")
 
 
-kabete_students = phf_students_using_campus('KABETE')
-chiromo_students = phf_students_using_campus('CHIROMO')
+insert_phf_records_site_chiromo(kabete_students, site_chiromo)
 
-insert_phf_records(kabete_students, site_kabete)
-insert_phf_records(chiromo_students, site_chiromo)
+
+def insert_phf_records_site_kabete(records, site):
+    try:
+        connection = mysql.connector.connect(user="admin",
+                                      password="admin",
+                                      host=site['host'],
+                                      database="school")
+        cursor = connection.cursor()
+
+        mysql_insert_query = """
+        INSERT INTO fragment_students_kabete (
+        ID, REGNO, CAMPUS, YEAROFSTUDY
+        ) VALUES (%s, %s, %s, %s)
+        """
+
+        cursor.executemany(mysql_insert_query, records)
+        connection.commit()
+        print(cursor.rowcount, f"Records inserted successfully into {site['application_wide_name']}")
+
+    except mysql.connector.Error as error:
+        print("Failed to insert record into {} MySQL table {}".format(site['application_wide_name'], error))
+
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print(f"CONNECTION TO FRAGMENT {site} CLOSED")
+
+
+insert_phf_records_site_kabete(chiromo_students, site_kabete)

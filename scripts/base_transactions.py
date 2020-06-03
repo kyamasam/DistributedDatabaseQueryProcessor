@@ -11,8 +11,6 @@ site_kabete = DATABASES['site_kabete']
 master_students_db = DATABASES['master_students_db']
 
 
-# create_fragment_kabete()
-
 def create_master_students_table():
     execute_query(query=
                '''CREATE TABLE students
@@ -25,7 +23,7 @@ def create_master_students_table():
                   )
 
 
-# create_master_students_table()
+create_master_students_table()
 
 
 def insert_to_master():
@@ -36,19 +34,20 @@ def insert_to_master():
             """)
 
 
-# insert_to_master()
+insert_to_master()
 
 
 def fetch_master_data():
     execute_query(query="select * from students")
 
 
-# fetch_master_data()
+fetch_master_data()
 
 
 def create_fees_table():
     execute_query(query =
-               '''CREATE TABLE feess_123456789
+               '''
+               CREATE TABLE fees
                          (
                            ID SERIAL,
                            REGNO  VARCHAR(255) REFERENCES students(REGNO) PRIMARY KEY,
@@ -62,7 +61,7 @@ create_fees_table()
 
 def insert_to_fees():
     insert_records_query(records_to_insert=fee_records, query="""
-            INSERT INTO feess_123456789 (
+            INSERT INTO fees (
             REGNO, FEE_BALANCE
             ) VALUES %s
             """)
@@ -72,7 +71,7 @@ insert_to_fees()
 
 
 def fetch_fee_data():
-    execute_query(query="select * from feess_123456789")
+    execute_query(query="select * from fees")
 
 
 fetch_fee_data()

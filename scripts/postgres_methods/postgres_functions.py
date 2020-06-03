@@ -95,11 +95,11 @@ def insert_records_query(records_to_insert, query, template=None, user="admin", 
         )
         connection.commit()
         count = cursor.rowcount
-        print(count, "Record inserted successfully into students table")
+        print(count, "Record inserted successfully into table")
 
     except (Exception, psycopg2.Error) as error:
         if (connection):
-            print("Failed to insert records into students table", error)
+            print("Failed to insert records into table", error)
 
     finally:
         # closing database connection.
