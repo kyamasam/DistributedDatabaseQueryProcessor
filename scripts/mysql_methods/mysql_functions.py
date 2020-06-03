@@ -3,9 +3,14 @@ import sys
 
 import mysql.connector
 from mysql.connector import Error
+from pprint import pprint
+
+from flask import  jsonify
 
 sys.path.append(os.path.dirname(os.path.abspath('../data')))
+sys.path.append(os.path.dirname(os.path.abspath('../')))
 from data.students_records import records
+from settings import DATABASES
 
 
 class DefaultMysqlParams:
@@ -53,13 +58,19 @@ def execute_query(query, user=myDefaultMysqlParams.user, password=myDefaultMysql
     try:
         connection = connect_to_db(user=user, password=password, host=host, database=database)
 
-        mySql_Create_Table_Query = query
+        query = query
+        print(query)
 
         cursor = connection.cursor()
-        result = cursor.execute(mySql_Create_Table_Query)
-        print("Table created successfully ")
-
-        return result
+        cursor.execute(query)
+        results = cursor.fetchall()
+        print(cursor.rowcount)
+        print(cursor.column_names)
+        results_array = results
+        results_array.insert(0,cursor.column_names)
+        results_array.append(query)
+        pprint(results)
+        return results
 
     except mysql.connector.Error as error:
         print("Failed to create table in MySQL: {}".format(error))
@@ -68,6 +79,7 @@ def execute_query(query, user=myDefaultMysqlParams.user, password=myDefaultMysql
             cursor.close()
             connection.close()
             print("MySQL connection is closed")
+
 
 
 def insert_records_query(query, records_to_insert, user=myDefaultMysqlParams.user, password=myDefaultMysqlParams.password,
@@ -95,6 +107,9 @@ def insert_records_query(query, records_to_insert, user=myDefaultMysqlParams.use
             connection.close()
             print("MySQL connection is closed")
 
+site_kabete = DATABASES['site_kabete']
+
+# execute_query(query="""SELECT ID,regno, CAMPUS, yearofstudy FROM students_kabete where CAMPUS='KABETE'""", database=site_kabete['database'], host=site_kabete['host'], )
 
 # create table query
 # execute_query(query='''CREATE TABLE students

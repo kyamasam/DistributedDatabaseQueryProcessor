@@ -1,5 +1,6 @@
 import os
 import sys
+from pprint import pprint
 
 import psycopg2
 import psycopg2.extras
@@ -31,6 +32,7 @@ def connect_db(user="admin", password="admin", host="34.70.144.81", port="5432",
 
     except (Exception, psycopg2.Error) as error:
         print("Error while connecting to PostgreSQL", error)
+        return error
     finally:
         # connection is closed by caller
         pass
@@ -38,11 +40,12 @@ def connect_db(user="admin", password="admin", host="34.70.144.81", port="5432",
 
 # connect_db(host=site_chiromo)
 
-def execute_query(query, user="admin", password="admin", host="34.70.144.81", port="5432", database="school"):
+def execute_query(query,host, user="admin", password="admin", port="5432", database="school"):
     try:
-        connection = connect_db()
+        connection = connect_db(user=user, password=password, host=host, port=port, database=database)
         cursor = connection.cursor()
         postgreSQL_select_Query = query
+        print("qur", postgreSQL_select_Query)
 
         cursor.execute(postgreSQL_select_Query)
         connection.commit()
@@ -51,34 +54,37 @@ def execute_query(query, user="admin", password="admin", host="34.70.144.81", po
             query_results = cursor.fetchall()
             if not query_results:
                 print("No records found")
+                return "No records found"
             else:
-                fields = ''
-                for field in cursor.description:
-                    fields += field[0] + ' | '
-                print('\n', fields.upper(), '\n')
-                for row in query_results:
-                    values.append(row)
-                    row_values = ''
-                    for element in row:
-                        row_values += str(element) + ' | '
-                    print(row_values)
-                    row_values = ''
-                print('\n')
-            return values
-        except(Exception):
+                pprint(query_results)
+
+            col_names = [field[0] for field in cursor.description]
+            # add the query to the last row
+            query_results_array = []
+            query_results_array=(query_results)
+            query_results_array.append(postgreSQL_select_Query)
+            query_results.insert(0, col_names)
+
+            return query_results_array
+        except Exception as e:
             # add a way of showing the result
             print("operation completed")
-
+            print(e)
+            return "An Error Occurred, Check Application Console for trace"
 
     except (Exception, psycopg2.Error) as error:
         print("Error", error)
+        return "An Error Occurred, Check Application Console for trace"
 
     finally:
         # closing database connection.
-        if (connection):
-            cursor.close()
-            connection.close()
-            print("PostgreSQL connection is closed")
+        try:
+            if connection:
+                cursor.close()
+                connection.close()
+                print("PostgreSQL connection is closed")
+        except Exception as e:
+            return "An Error Occurred, Check Application Console for trace"
 
 
 def insert_records_query(records_to_insert, query, template=None, user="admin", password="admin", host="34.70.144.81",
@@ -99,7 +105,8 @@ def insert_records_query(records_to_insert, query, template=None, user="admin", 
 
     except (Exception, psycopg2.Error) as error:
         if (connection):
-            print("Failed to insert records into table", error)
+            print("Failed to insert records into students table", error)
+            return "Failed to insert records into students table"
 
     finally:
         # closing database connection.
