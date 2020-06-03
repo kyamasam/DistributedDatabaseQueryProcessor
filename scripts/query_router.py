@@ -1,9 +1,17 @@
 import os
 import sys
 
-from data.students_records import records, records_with_id
+import flask
+from flask import request, jsonify
+
+from data.students_records import records_with_id
 from settings import DATABASES
-from utils.exceptions.exceptions import UnSupportedDialect
+from flask_cors import CORS, cross_origin
+
+app = flask.Flask(__name__)
+app.config["DEBUG"] = True
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 sys.path.append(os.path.dirname(os.path.abspath('utils/exceptions')))
 
@@ -26,7 +34,6 @@ class QueryObject():
 # SELECT *
 # FROM students
 # WHERE campus = 'KABETE'
-
 def route_query(query_object, target_database):
     # get the query string , main query function_type, target database,
     # get the target db
@@ -36,10 +43,10 @@ def route_query(query_object, target_database):
         print("Using ", selected_db)
     except KeyError:
         print("Error Database could not be found or is not registered in settings.py")
-        return KeyError
+        return "Error Database could not be found or is not registered in settings.py"
+        # return KeyError
     finally:
         pass
-    pass
 
     # get the query dialect
     dialect = selected_db['dialect']
@@ -53,14 +60,17 @@ def route_query(query_object, target_database):
             query_method.find("CREATE")) != -1:
         print("use the exec query function method")
         if dialect == "PostgreSQL":
+            print("Postegre dialect")
             # run the execute query found in the postgres functions file
-            return postgres_execute_query(full_query, host=selected_db['host'])
+            return postgres_execute_query(full_query, host=selected_db['host'], port=selected_db['port'],database=selected_db['database'], user=selected_db['user'], password=selected_db['password'])
         elif dialect == "MySQL":
+            print("MySql dialect")
             # run the execute query found in the mysql functions file
-            return mysql_execute_query(full_query, host=selected_db['host'])
+            return mysql_execute_query(full_query, host=selected_db['host'],database=selected_db['database'], user=selected_db['user'], password=selected_db['password'])
         else:
             # custom Exception
-            raise UnSupportedDialect()
+            return "Unsupported Dialect"
+            # raise UnSupportedDialect()
     elif (query_method.find("INSERT")) != -1:
         print("use insert method")
         if dialect == "PostgreSQL":
@@ -75,10 +85,11 @@ def route_query(query_object, target_database):
             return mysql_insert_records_query(full_query, query_object.records, host=selected_db['host'])
         else:
             # custom Exception
-            raise UnSupportedDialect()
+            return "Unsupported Dialect"
+            # raise UnSupportedDialect()
 
 
-my_select_query = QueryObject("SELECT * ", "FROM students", " where campus = 'CHIROMO'")
+my_select_query = QueryObject("SELECT * ", "FROM students_kabete", "")
 
 # an example for create records
 my_create_query = QueryObject(
@@ -94,12 +105,12 @@ my_create_query = QueryObject(
 # todo : Convert this query to allow user to concatenate records and
 #  query to look more like an actual mysql query
 # example of insert
-my_insert_query = QueryObject("""INSERT INTO students """, """(ID, REGNO, CAMPUS, YEAROFSTUDY) """, """VALUES (%s, %s, %s)""" , records=records_with_id)
-
+my_insert_query = QueryObject("""INSERT INTO students """, """(ID, REGNO, CAMPUS, YEAROFSTUDY) """,
+                              """VALUES (%s, %s, %s)""", records=records_with_id)
 
 
 # run query in a site running PostgreSQL
-# route_query(my_query, "site_kabete")
+# route_query(my_select_query, "site_kabete")
 
 # run in a site running MySQL
 # route_query(my_query_2, "site_kisumu")
@@ -108,4 +119,25 @@ my_insert_query = QueryObject("""INSERT INTO students """, """(ID, REGNO, CAMPUS
 # route_query(my_insert_query, "site_kisumu")
 
 # run in a PostgreSQL site
-route_query(my_insert_query, "site_chiromo")
+# route_query(my_insert_query, "site_chiromo")
+
+
+@app.route('/', methods=['GET'])
+@cross_origin()
+def home():
+    projection = request.args['projection']
+    print(projection)
+    cartesian_product = request.args['cartesian_product']
+    print(cartesian_product)
+    selection = request.args['selection']
+
+    target_database = request.args['target_database']
+
+    query = QueryObject(projection, cartesian_product, selection)
+
+    result = route_query(query, target_database)
+
+    return jsonify(result)
+
+
+app.run()

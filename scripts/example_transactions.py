@@ -1,3 +1,4 @@
+from query_router import route_query
 from settings import DATABASES
 import psycopg2
 
@@ -81,11 +82,12 @@ def fetch_fragment_chiromo():
 # fetch_fragment_chiromo()
 
 def fetch_fragment_kabete():
-    execute_query(query="select * from students_kabete", host=site_kabete['host'], )
-    execute_query(query="select * from students_kabete where id = 1", host=site_kabete['host'], )
+    print(DATABASES['site_kabete'])
+    # route_query(query="select * from students_kabete", port=DATABASES['site_kabete']['port'], )
+    # execute_query(query="select * from students_kabete where id = 1", host=site_kabete['host'], )
 
 
-# fetch_fragment_kabete()
+fetch_fragment_kabete()
 
 
 def fetch_master_data():

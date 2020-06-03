@@ -13,7 +13,8 @@ DATABASES = {
         'application_wide_name': 'site_chiromo',
         'user': 'admin',
         'password': 'admin',
-        'host': '35.222.5.84',
+        'host': '35.184.27.89',
+        'port':'5432',
         'database': 'school',
         'dialect': 'PostgreSQL',
         'platform': 'Debian 11.7-0+deb10u1'
@@ -22,19 +23,11 @@ DATABASES = {
         'application_wide_name': 'site_kabete',
         'user': 'admin',
         'password': 'admin',
-        'host': '127.0.0.1',
-        'database': 'school',
-        'dialect': 'PostgreSQL',
-        'platform': 'Debian 11.7-0+deb10u1'
-    },
-    'site_kisumu': {
-        'application_wide_name': 'site_kisumu',
-        'user': 'admin',
-        'password': 'admin',
         'host': '52.58.90.32',
+        'port':'3306',
         'database': 'school',
         'dialect': 'MySQL',
-        'platform':'Windows Server 2009',
+        'platform': 'Windows Server 2009',
     },
 }
 
