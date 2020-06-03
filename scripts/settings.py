@@ -30,4 +30,3 @@ DATABASES = {
         'platform': 'Windows Server 2009',
     },
 }
-

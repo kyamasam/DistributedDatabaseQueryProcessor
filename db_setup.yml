@@ -42,7 +42,7 @@
           
           - name: Create database
             become: yes
-            become_user: postgres
+            become_user: postgres_methods
             become_method: sudo
             postgresql_db:
               name: school
@@ -51,7 +51,7 @@
 
           - name: Ensure user has access to db
             become: yes
-            become_user: postgres
+            become_user: postgres_methods
             postgresql_user:
               db: school
               name: admin
