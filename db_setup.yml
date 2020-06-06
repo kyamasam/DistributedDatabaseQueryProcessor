@@ -42,7 +42,8 @@
           
           - name: Create database
             become: yes
-            become_user: postgres_methods
+            # become_user: postgres_methods
+            become_user: postgres
             become_method: sudo
             postgresql_db:
               name: school
@@ -51,7 +52,8 @@
 
           - name: Ensure user has access to db
             become: yes
-            become_user: postgres_methods
+            # become_user: postgres_methods
+            become_user: postgres
             postgresql_user:
               db: school
               name: admin
@@ -59,13 +61,13 @@
               priv: ALL
               state: present
             
-          - name: Create project directory
-            file:
-              state: directory
-              path: project
+          # - name: Create project directory
+          #   file:
+          #     state: directory
+          #     path: project
           
-          - name: Copy files to server
-            copy:
-              src: /home/sam/Desktop/School/DistributedDatabases/school-distributed-database/scripts
-              dest: /home/sam/project/
-              mode: 0777
+          # - name: Copy files to server
+          #   copy:
+          #     src: /home/sam/Desktop/School/DistributedDatabases/school-distributed-database/scripts
+          #     dest: /home/sam/project/
+          #     mode: 0777
