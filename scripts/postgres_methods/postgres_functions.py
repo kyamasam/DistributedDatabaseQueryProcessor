@@ -40,7 +40,7 @@ def connect_db(user="admin", password="admin", host="34.70.144.81", port="5432",
 
 # connect_db(host=site_chiromo)
 
-def execute_query(query,host="34.70.144.81", user="admin", password="admin", port="5432", database="school"):
+def execute_query(query,host, user="admin", password="admin", port="5432", database="school"):
     try:
         connection = connect_db(user=user, password=password, host=host, port=port, database=database)
         cursor = connection.cursor()
