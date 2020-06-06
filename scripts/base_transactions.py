@@ -86,7 +86,7 @@ def create_projects_table():
                            ID SERIAL PRIMARY KEY,
                            REGNO  VARCHAR(255) REFERENCES students(REGNO),
                            PROJECT_NAME  VARCHAR  NOT NULL,
-                           PROJECT_TYPE VARCHAR   NOT NULL,
+                           DEPARTMENT VARCHAR   NOT NULL,
                            SUPERVISOR VARCHAR     NOT NULL
                          ); '''
                   )
@@ -98,7 +98,7 @@ create_projects_table()
 def insert_to_projects():
     insert_records_query(records_to_insert=project_records, query="""
             INSERT INTO projects (
-            REGNO, PROJECT_NAME, PROJECT_TYPE, SUPERVISOR
+            REGNO, PROJECT_NAME, DEPARTMENT, SUPERVISOR
             ) VALUES %s
             """)
 

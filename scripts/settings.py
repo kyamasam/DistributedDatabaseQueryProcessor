@@ -27,15 +27,6 @@ DATABASES = {
         'dialect': 'MySQL',
         'platform': 'Windows Server 2009',
     },
-    'site_fees': {
-        'application_wide_name': 'site_fees',
-        'user': 'admin',
-        'password': 'admin',
-        'host': '34.70.144.81',
-        'database': 'school',
-        'dialect': 'PostgreSQL',
-        'platform': 'Debian 11.7-0+deb10u1'
-    },
     'site_departments': {
         'application_wide_name': 'site_departments',
         'user': 'admin',
@@ -54,4 +45,14 @@ DATABASES = {
         'dialect': 'PostgreSQL',
         'platform': 'Debian 11.7-0+deb10u1'
     },
+
+    # 'site_fees': {
+    #     'application_wide_name': 'site_fees',
+    #     'user': 'admin',
+    #     'password': 'admin',
+    #     'host': '34.70.144.81',
+    #     'database': 'school',
+    #     'dialect': 'PostgreSQL',
+    #     'platform': 'Debian 11.7-0+deb10u1'
+    # },
 }

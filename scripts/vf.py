@@ -29,7 +29,7 @@ def vf_projects_supervision_table(site):
         students_records = cursor.fetchall()
         print("students records successfully retrieved from projects")
         for row in students_records:
-            print(row[0], row[1])
+            print(row[0], row[1], row[2])
             students.append(row)
         return students
 
@@ -60,13 +60,13 @@ def vf_departments_projects(site):
 
         print("Fetching records from STUDENTS relation")
         cursor = connection.cursor()
-        query = "select id, department, project_name from projects ORDER BY department"
+        query = "select id, project_name, department from projects ORDER BY department"
 
         cursor.execute(query)
         students_records = cursor.fetchall()
         print("students records successfully retrieved from projects")
         for row in students_records:
-            print(row[0], row[1])
+            print(row[0], row[1], row[2])
             students.append(row)
         return students
 
@@ -81,8 +81,8 @@ def vf_departments_projects(site):
             print("Connection to fees closed \n")
 
 
-# print("\n FETCHING DEPARTMENT & PROJECT NAMES")
-# project_supervision_records = vf_projects_supervision_table(master_students_db)
+print("\n FETCHING DEPARTMENT & PROJECT NAMES")
+departments_projects = vf_departments_projects(master_students_db)
 
 
 def create_vf_table_site_academics(site):
@@ -145,7 +145,7 @@ def create_vf_table_site_departments(site):
             (
                 ID  INT    UNIQUE    NOT NULL,
                 PROJECT_NAME  VARCHAR(20)  UNIQUE  NOT NULL ,
-                DEPARTMENTS VARCHAR NOT NULL
+                DEPARTMENT VARCHAR NOT NULL
             ); '''
 
         result = cursor.execute(create_table_query)
@@ -171,139 +171,74 @@ print("CREATING A VH TABLE IN DEPARTMENTS")
 create_vf_table_site_departments(site_departments)
 
 
-# def create_dhf_fee_table_chiromo(site):
-#     """Create a dhf table in MySQL db on site."""
-#     try:
-#         connection = mysql.connector.connect(
-#             user="admin",
-#             password="admin",
-#             host=site['host'],
-#             database="school"
-#                                     )
+def insert_vf_records_academics(records, site):
+    try:
+        connection = psycopg2.connect(user="admin",
+                                      password="admin",
+                                      host=site['host'],
+                                      port="5432",
+                                      database="school")
+        cursor = connection.cursor()
 
-#         if connection.is_connected():
-#             db_Info = connection.get_server_info()
-#             print(f"Connected to db {site}, MySQL Server version ", db_Info)
-#         cursor = connection.cursor()
+        postgresql_insert_query = """
+        INSERT INTO project_supervision (
+        ID, REGNO, SUPERVISOR
+        ) VALUES (%s, %s, %s)
+        """
 
-#         create_table_query = '''CREATE TABLE fragment_fee_chiromo
-#             (
-#                 ID    INT    NOT NULL    UNIQUE,
-#                 REGNO  VARCHAR(20)    NOT NULL UNIQUE,
-#                 FEE_BALANCE         REAL
-#             ); '''
+        # for record in records:
+        #     cursor.execute(postgresql_insert_query, record)
 
-#         result = cursor.execute(create_table_query)
-#         connection.commit()
-#         print(f"Fragment created successfully in {site['application_wide_name']}")
+        cursor.executemany(postgresql_insert_query, records)
+        connection.commit()
+        print(cursor.rowcount, f"Records inserted successfully into {site['application_wide_name']}")
 
-#         return result
+    except (Exception, psycopg2.Error) as error:
+        print("Failed to insert record into {} table {}".format(site['application_wide_name'], error))
 
-#     except mysql.connector.Error as error:
-#         print("Failed to create fragment table in MySQL: {}".format(error))
-#     finally:
-#         if (connection.is_connected()):
-#             cursor.close()
-#             connection.close()
-#             print(f"{site['application_wide_name']} MySQL connection is closed")
+    finally:
+        if (connection):
+            cursor.close()
+            connection.close()
+            print(f"CONNECTION TO FRAGMENT {site} CLOSED")
 
 
-# create_dhf_fee_table_chiromo(site_chiromo)
+insert_vf_records_academics(project_supervision_records, site_academics)
 
 
-# def insert_dhf_fee_kabete_records(records, site):
-#     try:
-#         connection = psycopg2.connect(user="admin",
-#                                       password="admin",
-#                                       host=site['host'],
-#                                       port="5432",
-#                                       database="school")
-#         cursor = connection.cursor()
+def insert_vf_records_departments(records, site):
+    try:
+        connection = psycopg2.connect(user="admin",
+                                      password="admin",
+                                      host=site['host'],
+                                      port="5432",
+                                      database="school")
+        cursor = connection.cursor()
 
-#         postgresql_insert_query = """
-#         INSERT INTO fragment_fee_kabete (
-#         ID, REGNO, FEE_BALANCE
-#         ) VALUES (%s, %s, %s)
-#         """
+        postgresql_insert_query = """
+        INSERT INTO departments_projects (
+        ID, PROJECT_NAME, DEPARTMENT
+        ) VALUES (%s, %s, %s)
+        """
 
-#         # for record in records:
-#         #     cursor.execute(postgresql_insert_query, record)
+        # for record in records:
+        #     cursor.execute(postgresql_insert_query, record)
 
-#         cursor.executemany(postgresql_insert_query, records)
-#         connection.commit()
-#         print(cursor.rowcount, f"Records inserted successfully into {site['application_wide_name']}")
+        cursor.executemany(postgresql_insert_query, records)
+        connection.commit()
+        print(cursor.rowcount, f"Records inserted successfully into {site['application_wide_name']}")
 
-#     except (Exception, psycopg2.Error) as error:
-#         print("Failed to insert record into {} MySQL table {}".format(site['application_wide_name'], error))
+    except (Exception, psycopg2.Error) as error:
+        print("Failed to insert record into {} departments table {}".format(site['application_wide_name'], error))
 
-#     finally:
-#         if (connection):
-#             cursor.close()
-#             connection.close()
-#             print(f"CONNECTION TO FRAGMENT {site} CLOSED")
-
-
-# insert_dhf_fee_kabete_records(fee_kabete, site_kabete)
+    finally:
+        if (connection):
+            cursor.close()
+            connection.close()
+            print(f"CONNECTION TO FRAGMENT {site} CLOSED")
 
 
-# def insert_dhf_fee_chiromo_records(records, site):
-#     try:
-#         connection = mysql.connector.connect(user="admin",
-#                                       password="admin",
-#                                       host=site['host'],
-#                                       database="school")
-#         cursor = connection.cursor()
-
-#         mysql_insert_query = """
-#         INSERT INTO fragment_fee_chiromo (
-#         ID, REGNO, FEE_BALANCE
-#         ) VALUES (%s, %s, %s)
-#         """
-
-#         cursor.executemany(mysql_insert_query, records)
-#         connection.commit()
-#         print(cursor.rowcount, f"Records inserted successfully into {site['application_wide_name']}")
-
-#     except mysql.connector.Error as error:
-#         print("Failed to insert record into {} MySQL table {}".format(site['application_wide_name'], error))
-
-#     finally:
-#         if (connection.is_connected()):
-#             cursor.close()
-#             connection.close()
-#             print(f"CONNECTION TO FRAGMENT {site} CLOSED")
-
-
-# insert_dhf_fee_chiromo_records(fee_chiromo, site_chiromo)
-
-
-# def fetch_fragment_fee_chiromo_records(site):
-#     try:
-#         connection = mysql.connector.connect(user="admin",
-#                                       password="admin",
-#                                       host=site['host'],
-#                                       database="school")
-#         cursor = connection.cursor()
-
-#         query = """
-#         SELECT * FROM fragment_fee_chiromo
-#         """
-
-#         cursor.execute(query)
-#         result = cursor.fetchall()
-#         print(result)
-
-#     except mysql.connector.Error as error:
-#         print("Failed to insert record into {} MySQL table {}".format(site['application_wide_name'], error))
-
-#     finally:
-#         if (connection.is_connected()):
-#             cursor.close()
-#             connection.close()
-#             print(f"CONNECTION TO FRAGMENT {site} CLOSED")
-
-
-# fetch_fragment_fee_chiromo_records(site_chiromo)
+insert_vf_records_departments(departments_projects, site_departments)
 
 
 # def fetch_fragment_fee_kabete_records(site):

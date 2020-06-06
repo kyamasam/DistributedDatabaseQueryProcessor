@@ -9,6 +9,8 @@ from settings import DATABASES
 site_chiromo = DATABASES['site_chiromo']
 site_kabete = DATABASES['site_kabete']
 master_students_db = DATABASES['master_students_db']
+site_academics = DATABASES['site_academics']
+site_departments = DATABASES['site_departments']
 
 
 def delete_master_students_table(site):
@@ -24,7 +26,7 @@ def delete_master_students_table(site):
 
         cursor = connection.cursor()
 
-        query = '''DROP TABLE students
+        query = '''DROP TABLE students CASCADE
             ; '''
 
         print("Deleting records from master students table")
@@ -123,9 +125,87 @@ def delete_projects_table(site):
             print(f"{site['application_wide_name']} connection is closed \n \n")
 
 
-print("DROPING FEES TABLE")
+print("DROPING PROJECTS TABLE")
 time.sleep(2)
 delete_projects_table(master_students_db)
+
+
+def delete_academics_fragment(site):
+    """Create a dhf table in MySQL db on site."""
+    try:
+        connection = psycopg2.connect(
+            user="admin",
+            password="admin",
+            host=site['host'],
+            port="5432",
+            database="school"
+                                    )
+
+        cursor = connection.cursor()
+
+        query = '''DROP TABLE project_supervision
+            ; '''
+
+        print("Deleting records from project supervision table")
+        time.sleep(3)
+        result = cursor.execute(query)
+        connection.commit()
+        print(f"Project supervision table deleted successfully in {site['application_wide_name']} \n")
+
+        return result
+
+    except (Exception, psycopg2.Error) as error:
+        print("Error droping projects supervision table >>", error)
+
+    finally:
+        if (connection):
+            cursor.close()
+            connection.close()
+            print(f"{site['application_wide_name']} connection is closed \n \n")
+
+
+print("DROPING PROJECTS SUPERVISION TABLE")
+time.sleep(2)
+delete_academics_fragment(site_academics)
+
+
+def delete_departments_fragment(site):
+    """Create a dhf table in MySQL db on site."""
+    try:
+        connection = psycopg2.connect(
+            user="admin",
+            password="admin",
+            host=site['host'],
+            port="5432",
+            database="school"
+                                    )
+
+        cursor = connection.cursor()
+
+        query = '''DROP TABLE departments_projects
+            ; '''
+
+        print("Deleting records from departments projects table")
+        time.sleep(3)
+        result = cursor.execute(query)
+        connection.commit()
+        print(f"Departments projects table deleted successfully in {site['application_wide_name']} \n")
+
+        return result
+
+    except (Exception, psycopg2.Error) as error:
+        print("Error droping departments table >>", error)
+
+    finally:
+        if (connection):
+            cursor.close()
+            connection.close()
+            print(f"{site['application_wide_name']} connection is closed \n \n")
+
+
+print("DROPING DEPARTMENTS PROJECTS TABLE")
+time.sleep(2)
+delete_departments_fragment(site_departments)
 
 
 def delete_fragment_students_chiromo(site):
