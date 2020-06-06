@@ -18,12 +18,12 @@ DATABASES = {
         'dialect': 'PostgreSQL',
         'platform': 'Debian 11.7-0+deb10u1'
     },
-    'site_kabete': {
+    'site_chiromo': {
         'application_wide_name': 'site_kabete',
         'user': 'admin',
         'password': 'admin',
         'host': '52.58.90.32',
-        'port':'3306',
+        'port': '3306',
         'database': 'school',
         'dialect': 'MySQL',
         'platform': 'Windows Server 2009',
@@ -46,14 +46,4 @@ DATABASES = {
         'dialect': 'PostgreSQL',
         'platform': 'Debian 11.7-0+deb10u1'
     },
-
-    # 'site_fees': {
-    #     'application_wide_name': 'site_fees',
-    #     'user': 'admin',
-    #     'password': 'admin',
-    #     'host': '34.70.144.81',
-    #     'database': 'school',
-    #     'dialect': 'PostgreSQL',
-    #     'platform': 'Debian 11.7-0+deb10u1'
-    # },
 }

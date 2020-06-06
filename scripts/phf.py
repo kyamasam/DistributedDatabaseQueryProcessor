@@ -160,7 +160,7 @@ def insert_phf_records_site_chiromo(records, site):
             print(f"CONNECTION TO FRAGMENT {site} CLOSED")
 
 
-insert_phf_records_site_chiromo(kabete_students, site_chiromo)
+insert_phf_records_site_chiromo(chiromo_students, site_chiromo)
 
 
 def insert_phf_records_site_kabete(records, site):
@@ -193,4 +193,4 @@ def insert_phf_records_site_kabete(records, site):
             print("Connection to site kabete closed \n")
 
 
-insert_phf_records_site_kabete(chiromo_students, site_kabete)
+insert_phf_records_site_kabete(kabete_students, site_kabete)
