@@ -79,11 +79,21 @@ def fetch_fragment_projects_departments_records(site):
 
 print("JOINING FRAGMENTS")
 time.sleep(2)
-reconstructed_projects_data = fetch_fragment_projects_academics_records(
-    site_academics
-) + fetch_fragment_projects_departments_records(site_departments)
 
-print(reconstructed_projects_data)
+acads = fetch_fragment_projects_academics_records(
+    site_academics
+)
+depts = fetch_fragment_projects_departments_records(site_departments)
+
+reconstructed_projects_data = []
+for record in acads:
+    for i in depts:
+        if i[0] == record[0]:
+            rec = (record[0], record[1], i[1], i[2], record[2])
+            print(rec)
+            reconstructed_projects_data.append(rec)
+
+# print(reconstructed_projects_data)
 
 
 def create_reconstructed_projects_table(site):
@@ -117,7 +127,7 @@ def create_reconstructed_projects_table(site):
         return result
 
     except (Exception, psycopg2.Error) as error:
-        print("Error reconstructing projects table", error)
+        print("Error reconstructing projects table >> ", error)
 
     finally:
         # closing database connection
@@ -130,7 +140,7 @@ def create_reconstructed_projects_table(site):
 create_reconstructed_projects_table(master_students_db)
 
 
-def insert_records_into_reconstructed_fee_table(records, site):
+def insert_records_into_reconstructed_projects_table(records, site):
     try:
         connection = psycopg2.connect(user="admin",
                                       password="admin",
@@ -164,11 +174,11 @@ def insert_records_into_reconstructed_fee_table(records, site):
             print(f"CONNECTION TO {site} CLOSED")
 
 
-# print("RECONSTRUCTING FEES TABLE")
-# time.sleep(2)
-# insert_records_into_reconstructed_fee_table(
-#     reconstructed_fees_data, master_students_db
-# )
+print("RECONSTRUCTING PROJECTS TABLE")
+time.sleep(2)
+insert_records_into_reconstructed_projects_table(
+    reconstructed_projects_data, master_students_db
+)
 
 
 def fetch_reconstructed_projects_table(site):

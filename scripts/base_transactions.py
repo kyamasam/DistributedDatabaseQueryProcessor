@@ -22,7 +22,8 @@ def create_master_students_table():
                            REGNO   VARCHAR(255) PRIMARY KEY,
                            CAMPUS         TEXT      NOT NULL,
                            YEAROFSTUDY    INT       NOT NULL
-                         ); '''
+                         ); ''',
+                         host=master_students_db['host']
                   )
 
 

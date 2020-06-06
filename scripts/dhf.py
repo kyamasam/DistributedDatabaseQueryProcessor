@@ -23,7 +23,6 @@ def dhf_fees_table(college):
 
         print("Fetching records from STUDENTS relation")
         cursor = connection.cursor()
-        # query = "select students.id, students.regno, fees.fee_payment from students inner join fees on students.regno = fees.regno where students.campus = %s"
         query = "select fees.id, students.regno, fees.fee_payment from students inner join fees on students.regno = fees.regno where students.campus = %s"
 
         cursor.execute(query, (college,))
