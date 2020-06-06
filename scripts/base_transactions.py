@@ -1,10 +1,14 @@
 from settings import DATABASES
 import psycopg2
-import mysql.connector
+# import mysql.connector
 
-from data.students_records import records, fee_records
+from data.students_records import (
+    records, fee_records, project_records
+)
 
-from postgres_methods.postgres_functions import execute_query, insert_records_query, connect_db
+from postgres_methods.postgres_functions import (
+    execute_query, insert_records_query, connect_db
+)
 
 site_chiromo = DATABASES['site_chiromo']
 site_kabete = DATABASES['site_kabete']
@@ -12,8 +16,7 @@ master_students_db = DATABASES['master_students_db']
 
 
 def create_master_students_table():
-    execute_query(query=
-               '''CREATE TABLE students
+    execute_query(query='''CREATE TABLE students
                          (
                            ID SERIAL,
                            REGNO   VARCHAR(255) PRIMARY KEY,
@@ -45,13 +48,12 @@ fetch_master_data()
 
 
 def create_fees_table():
-    execute_query(query =
-               '''
+    execute_query(query='''
                CREATE TABLE fees
                          (
-                           ID SERIAL,
-                           REGNO  VARCHAR(255) REFERENCES students(REGNO) PRIMARY KEY,
-                           FEE_BALANCE         REAL
+                           ID SERIAL PRIMARY KEY,
+                           REGNO  VARCHAR(255) REFERENCES students(REGNO),
+                           FEE_PAYMENT         REAL
                          ); '''
                   )
 
@@ -62,7 +64,7 @@ create_fees_table()
 def insert_to_fees():
     insert_records_query(records_to_insert=fee_records, query="""
             INSERT INTO fees (
-            REGNO, FEE_BALANCE
+            REGNO, FEE_PAYMENT
             ) VALUES %s
             """)
 
@@ -77,29 +79,38 @@ def fetch_fee_data():
 fetch_fee_data()
 
 
-# def fetch_fragment_chiromo():
-#     execute_query(query="select * from students_chiromo", host=site_chiromo['host'], )
-
-#     # FETCH PARAMETARIZED DATA
-
-#     execute_query(query="select * from students_chiromo where id = 1", host=site_chiromo['host'], )
-
-
-# fetch_fragment_chiromo()
-
-# def fetch_fragment_kabete():
-#     execute_query(query="select * from students_kabete", host=site_kabete['host'], )
-#     execute_query(query="select * from students_kabete where id = 1", host=site_kabete['host'], )
+def create_projects_table():
+    execute_query(query='''
+               CREATE TABLE projects
+                         (
+                           ID SERIAL PRIMARY KEY,
+                           REGNO  VARCHAR(255) REFERENCES students(REGNO),
+                           PROJECT_NAME  VARCHAR  NOT NULL,
+                           PROJECT_TYPE VARCHAR   NOT NULL,
+                           SUPERVISOR VARCHAR     NOT NULL
+                         ); '''
+                  )
 
 
-# fetch_fragment_kabete()
+create_projects_table()
 
 
-# def delete_data_from_master():
-#     execute_query(query="Delete from students where id = 10")
+def insert_to_projects():
+    insert_records_query(records_to_insert=project_records, query="""
+            INSERT INTO projects (
+            REGNO, PROJECT_NAME, PROJECT_TYPE, SUPERVISOR
+            ) VALUES %s
+            """)
 
 
-# delete_data_from_master()
+insert_to_projects()
+
+
+def fetch_projects_data():
+    execute_query(query="select * from projects")
+
+
+fetch_projects_data()
 
 
 def update_student_record(student_id, campus):

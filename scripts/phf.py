@@ -50,22 +50,23 @@ chiromo_students = phf_students_using_campus('CHIROMO')
 def create_phf_table_site_kabete(site):
     """Create fragment table in MySQL db on site."""
     try:
-        connection = mysql.connector.connect(
+        connection = psycopg2.connect(
             user="admin",
             password="admin",
             host=site['host'],
+            port="5432",
             database="school"
                                     )
 
-        if connection.is_connected():
-            db_Info = connection.get_server_info()
-            print(f"Connected to db {site}, MySQL Server version ", db_Info)
+        # if connection.is_connected():
+        #     db_Info = connection.get_server_info()
+        #     print(f"Connected to db {site}, MySQL Server version ", db_Info)
         cursor = connection.cursor()
 
-        create_table_query = '''CREATE TABLE fragment_students_kabete
+        create_table_query = '''CREATE TABLE students_kabete
             (
-                ID     INT            NOT NULL UNIQUE,
-                REGNO  VARCHAR(20)    NOT NULL UNIQUE,
+                ID     INT  UNIQUE          NOT NULL ,
+                REGNO  VARCHAR(20) UNIQUE   NOT NULL ,
                 CAMPUS         TEXT      NOT NULL,
                 YEAROFSTUDY    INT       NOT NULL
             ); '''
@@ -76,13 +77,15 @@ def create_phf_table_site_kabete(site):
 
         return result
 
-    except mysql.connector.Error as error:
-        print("Failed to create fragment table in MySQL: {}".format(error))
+    except (Exception, psycopg2.Error) as error:
+        print("Error creating table", error)
+
     finally:
-        if (connection.is_connected()):
+        # closing database connection
+        if (connection):
             cursor.close()
             connection.close()
-            print(f"{site['application_wide_name']} MySQL connection is closed")
+            print("Connection to site_kabete closed \n")
 
 
 create_phf_table_site_kabete(site_kabete)
@@ -103,7 +106,7 @@ def create_phf_table_site_chiromo(site):
             print(f"Connected to db {site}, MySQL Server version ", db_Info)
         cursor = connection.cursor()
 
-        create_table_query = '''CREATE TABLE fragment_students_chiromo
+        create_table_query = '''CREATE TABLE students_chiromo
             (
                 ID     INT            NOT NULL UNIQUE,
                 REGNO  VARCHAR(20)    NOT NULL UNIQUE,
@@ -138,7 +141,7 @@ def insert_phf_records_site_chiromo(records, site):
         cursor = connection.cursor()
 
         mysql_insert_query = """
-        INSERT INTO fragment_students_chiromo (
+        INSERT INTO students_chiromo (
         ID, REGNO, CAMPUS, YEAROFSTUDY
         ) VALUES (%s, %s, %s, %s)
         """
@@ -162,14 +165,15 @@ insert_phf_records_site_chiromo(kabete_students, site_chiromo)
 
 def insert_phf_records_site_kabete(records, site):
     try:
-        connection = mysql.connector.connect(user="admin",
+        connection = psycopg2.connect(user="admin",
                                       password="admin",
                                       host=site['host'],
+                                      port="5432",
                                       database="school")
         cursor = connection.cursor()
 
         mysql_insert_query = """
-        INSERT INTO fragment_students_kabete (
+        INSERT INTO students_kabete (
         ID, REGNO, CAMPUS, YEAROFSTUDY
         ) VALUES (%s, %s, %s, %s)
         """
@@ -178,14 +182,15 @@ def insert_phf_records_site_kabete(records, site):
         connection.commit()
         print(cursor.rowcount, f"Records inserted successfully into {site['application_wide_name']}")
 
-    except mysql.connector.Error as error:
-        print("Failed to insert record into {} MySQL table {}".format(site['application_wide_name'], error))
+    except (Exception, psycopg2.Error) as error:
+        print("Error inserting data into fragment table", error)
 
     finally:
-        if (connection.is_connected()):
+        # closing database connection
+        if (connection):
             cursor.close()
             connection.close()
-            print(f"CONNECTION TO FRAGMENT {site} CLOSED")
+            print("Connection to site kabete closed \n")
 
 
 insert_phf_records_site_kabete(chiromo_students, site_kabete)

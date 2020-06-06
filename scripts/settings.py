@@ -9,23 +9,14 @@ DATABASES = {
         'dialect': 'postgres_methods',
         'platform': 'Debian 11.7-0+deb10u1'
     },
-    # 'site_chiromo': {
-    #     'application_wide_name': 'site_chiromo',
-    #     'user': 'admin',
-    #     'password': 'admin',
-    #     'host': '35.222.5.84',
-    #     'database': 'school',
-    #     'dialect': 'PostgreSQL',
-    #     'platform': 'Debian 11.7-0+deb10u1'
-    # },
     'site_kabete': {
         'application_wide_name': 'site_kabete',
         'user': 'admin',
         'password': 'admin',
-        'host': '52.58.90.32',
+        'host': '35.225.199.176',
         'database': 'school',
-        'dialect': 'MySQL',
-        'platform': 'Windows Server 2009',
+        'dialect': 'PostgreSQL',
+        'platform': 'Debian 11.7-0+deb10u1'
     },
     'site_chiromo': {
         'application_wide_name': 'site_chiromo',
@@ -41,6 +32,24 @@ DATABASES = {
         'user': 'admin',
         'password': 'admin',
         'host': '34.70.144.81',
+        'database': 'school',
+        'dialect': 'PostgreSQL',
+        'platform': 'Debian 11.7-0+deb10u1'
+    },
+    'site_departments': {
+        'application_wide_name': 'site_departments',
+        'user': 'admin',
+        'password': 'admin',
+        'host': '35.222.197.196',
+        'database': 'school',
+        'dialect': 'PostgreSQL',
+        'platform': 'Debian 11.7-0+deb10u1'
+    },
+    'site_academics': {
+        'application_wide_name': 'site_academics',
+        'user': 'admin',
+        'password': 'admin',
+        'host': '35.188.215.224',
         'database': 'school',
         'dialect': 'PostgreSQL',
         'platform': 'Debian 11.7-0+deb10u1'
